@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { getCachedProduct, setCachedProduct } from "@/src/lib/productCache";
+import ProductCard from "@/src/components/ProductCard";
 import SizeGuide from "@/src/components/SizeGuide";
 import "swiper/css";
 import { useRef } from "react";
@@ -19,6 +20,14 @@ import {
 import API from "./../../../lib/api";
 import { useCart } from "./../../../context/CartContext";
 
+type Product = {
+  _id: string;
+  name: string;
+  price: number;
+  category?: string;
+  occasion?: string;
+};
+
 export default function ProductDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
@@ -32,6 +41,7 @@ export default function ProductDetailsPage() {
   const { addToCart } = useCart();
   const swiperRef = useRef<any>(null);
   const [openSection, setOpenSection] = useState<string | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
 
   const toggleSection = (section: string) => {
     setOpenSection(openSection === section ? null : section);
@@ -97,6 +107,38 @@ export default function ProductDetailsPage() {
     setSelectedSize((prev) => (prev === sizeLabel ? null : sizeLabel));
     setErrorMsg(null);
   };
+  useEffect(() => {
+    if (!product) return;
+
+    const fetchRelated = async () => {
+      try {
+        const res = await API.get("/products");
+        const data = res.data.data || res.data;
+
+        const products = Array.isArray(data) ? data : [];
+
+        const related = products
+          .filter((p: Product) => String(p._id) !== String(product._id))
+          .filter((p: Product) => {
+            const sameCategory = p.category === product.category;
+
+            const sameOccasion =
+              Array.isArray(p.occasion) &&
+              product.occasion &&
+              p.occasion.some((o: string) => product.occasion.includes(o));
+
+            return sameCategory || sameOccasion;
+          })
+          .slice(0, 8);
+
+        setRelatedProducts(related);
+      } catch (err) {
+        console.error("Related products error:", err);
+      }
+    };
+
+    fetchRelated();
+  }, [product]);
 
   if (loading) {
     return (
@@ -167,7 +209,7 @@ export default function ProductDetailsPage() {
             <div className="lg:sticky lg:top-24 w-full max-w-md md:max-w-lg space-y-4">
               {/* Mobile Slider */}
 
-              <div className="block md:hidden">
+              <div className=" md:hidden">
                 <Swiper
                   spaceBetween={10}
                   slidesPerView={1}
@@ -470,6 +512,27 @@ export default function ProductDetailsPage() {
             </div>
           </div>
         </div>
+        {/* YOU MAY ALSO LIKE */}
+        {relatedProducts.length > 0 && (
+          <section className="max-w-7xl mx-auto pt-9 pb-8">
+            <h2 className="text-2xl sm:text-xl font-semibold text-center mb-6">
+              You May Also Like
+            </h2>
+
+            <div className="flex justify-center">
+              <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
+                {relatedProducts.map((item) => (
+                  <div
+                    key={item._id}
+                    className="min-w-[200px] sm:min-w-[220px] md:min-w-[240px]"
+                  >
+                    <ProductCard product={item} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
       </main>
       {/* SIZE GUIDE MODAL */}
       {showSizeGuide && (

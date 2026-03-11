@@ -37,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.className} ${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
         <Toaster position="top-right" />
         <CartProvider>

@@ -92,8 +92,8 @@ interface CartItem {
 interface CartContextType {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
-  removeFromCart: (id: string) => void;
-  updateQuantity: (id: string, quantity: number) => void; // ✅ added
+  removeFromCart: (id: string, size: string) => void;
+  updateQuantity: (id: string, size: string, quantity: number) => void; // ✅ added
   clearCart: () => void;
 }
 
@@ -130,17 +130,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return [...prev, { ...item, quantity: 1 }];
     });
   };
-
-  const removeFromCart = (id: string) => {
-    setCart((prev) => prev.filter((p) => p._id !== id));
+  const removeFromCart = (id: string, size: string) => {
+    setCart((prev) => prev.filter((p) => !(p._id === id && p.size === size)));
   };
-
   // ✅ Update quantity
-  const updateQuantity = (id: string, quantity: number) => {
+  const updateQuantity = (id: string, size: string, quantity: number) => {
     if (quantity < 1) return;
 
     setCart((prev) =>
-      prev.map((item) => (item._id === id ? { ...item, quantity } : item)),
+      prev.map((item) =>
+        item._id === id && item.size === size ? { ...item, quantity } : item,
+      ),
     );
   };
 

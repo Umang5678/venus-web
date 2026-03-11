@@ -13,7 +13,7 @@ export default function ProductsPage() {
   const occasion = searchParams.get("occasion");
 
   useEffect(() => {
-const cacheKey = `products-${category || "all"}-${occasion || "none"}`;
+    const cacheKey = `products-${category || "all"}-${occasion || "none"}`;
 
     const cached = sessionStorage.getItem(cacheKey);
 
@@ -25,12 +25,11 @@ const cacheKey = `products-${category || "all"}-${occasion || "none"}`;
 
     const fetchProducts = async () => {
       try {
-       const res = await API.get("/products", {
-  params: {
-    ...(category && { category }),
-    ...(occasion && { occasion }),
-  },
-
+        const res = await API.get("/products", {
+          params: {
+            ...(category && { category }),
+            ...(occasion && { occasion }),
+          },
         });
 
         const productsData = res.data.data || res.data;
@@ -55,7 +54,7 @@ const cacheKey = `products-${category || "all"}-${occasion || "none"}`;
     };
 
     fetchProducts();
-  }, [category,occasion]);
+  }, [category, occasion]);
   if (loading)
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-100">
@@ -68,7 +67,11 @@ const cacheKey = `products-${category || "all"}-${occasion || "none"}`;
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-100 pt-28 pb-12">
       <h1 className="text-2xl font-bold mb-6 text-center text-pink-700">
-        {category ? category.replace(/-/g, " ").toUpperCase() : "All PRODUCTS"}
+        {category
+          ? category.replace(/-/g, " ").toUpperCase()
+          : occasion
+            ? occasion.replace(/-/g, " ").toUpperCase()
+            : "All PRODUCTS"}
       </h1>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
