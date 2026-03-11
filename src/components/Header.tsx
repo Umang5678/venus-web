@@ -1,42 +1,88 @@
 "use client";
-
+import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { ShoppingCart, Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, X, ShoppingBag ,  ChevronRight,} from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const { cart } = useCart();
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
+const [occasionOpen, setOccasionOpen] = useState(false);
+  const [openSection, setOpenSection] = useState<string | null>(null);
+
+const pathname = usePathname();
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+  if (menuOpen) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
+
+  return () => {
+    document.body.style.overflow = "auto";
+  };
+}, [menuOpen]);
 
   return (
-    <header className="fixed top-0 w-full bg-white shadow-md z-50">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="text-2xl font-bold text-pink-600 tracking-wide"
-        >
-          Venus Fashion
-        </Link>
+    <>
+      {/* HEADER */}
+    <header
+  className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+    pathname === "/" 
+      ? scrolled
+        ? "bg-white shadow-md"
+        : "bg-transparent"
+      : "bg-white shadow-md"
+  }`}
+>
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
-        {/* Desktop Menu */}
-        <nav className="hidden md:flex items-center gap-8 text-gray-700 font-medium">
-          <Link href="/" className="hover:text-pink-600 transition">
-            Home
+          {/* Menu Button */}
+     <button
+  onClick={() => setMenuOpen(true)}
+  className={`${
+    pathname === "/" && !scrolled ? "text-white" : "text-black"
+  }`}
+>
+  <Menu size={28} />
+</button>
+
+          {/* Logo */}
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/images/vflogo.png"
+              alt="Venus Fashion"
+              width={160}
+              height={100}
+              className={`h-8 md:h-10 w-auto transition ${
+            pathname === "/" && !scrolled ? "invert brightness-0" : ""
+              }`}
+              priority
+            />
           </Link>
 
-          <Link href="/products" className="hover:text-pink-600 transition">
-            Products
-          </Link>
-
-          <Link href="/my-orders">My Orders</Link>
           {/* Cart */}
           <Link href="/cart" className="relative">
-            <ShoppingCart
-              className="text-pink-600 hover:text-pink-700 transition"
+            <ShoppingBag
+              className={` transition ${
+             pathname === "/" && !scrolled ? "text-white" : "text-black"
+              }`}
               size={26}
             />
 
@@ -46,37 +92,146 @@ export default function Header() {
               </span>
             )}
           </Link>
-        </nav>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-pink-600 focus:outline-none"
+        </div>
+      </header>
+
+      {/* SIDEBAR MENU */}
+      <div
+        className={`fixed top-0 left-0 h-full bg-white shadow-lg z-50 transform transition-transform duration-300
+        ${menuOpen ? "translate-x-0" : "-translate-x-full"}
+        w-[80%] md:w-[25%]`}
+      >
+        <div className="p-6">
+
+          {/* Close Button */}
+          <button
+            onClick={() => setMenuOpen(false)}
+            className="mb-8 text-black"
+          >
+            <X size={28} />
+          </button>
+
+<motion.nav
+  initial="hidden"
+  animate="visible"
+  variants={{
+    visible: {
+      transition: { staggerChildren: 0.15 }
+    }
+  }}
+  className="flex flex-col gap-5 text-lg font-medium text-gray-800"
+>
+
+  {/* HOME */}
+  <Link href="/" onClick={() => setMenuOpen(false)}>HOME</Link>
+
+  {/* PRODUCTS */}
+  <Link href="/products" onClick={() => setMenuOpen(false)}>PRODUCTS</Link>
+
+  {/* NEW IN */}
+  <Link href="/products?occasion=NEW IN" onClick={() => setMenuOpen(false)}>
+    NEW IN
+  </Link>
+
+  {/* BEST SELLER */}
+  <Link href="/products?occasion=BEST SELLER" onClick={() => setMenuOpen(false)}>
+    BEST SELLER
+  </Link>
+
+  {/* SHOP BY CATEGORY */}
+  <button
+    onClick={() => setCategoryOpen(!categoryOpen)}
+    className="flex justify-between items-center"
+  >
+    SHOP BY CATEGORY
+     <ChevronRight
+                      className={`transition-transform duration-300 transform  text-black ${
+                        categoryOpen ? "rotate-90" : ""
+                      }`}
+                      size={18}
+                    />
+  </button>
+
+  {categoryOpen && (
+    <motion.div
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: "auto", opacity: 1 }}
+      className="flex flex-col gap-3 ml-4 text-base"
+    >
+      <Link href="/products?category=Chaniya Choli" onClick={() => setMenuOpen(false)}>
+      CHANIYA CHOLI
+      </Link>
+
+      <Link href="/products?category=Kurti Pair" onClick={() => setMenuOpen(false)}>
+        KURTI PAIR
+      </Link>
+
+      <Link href="/products?category=Gown Sets" onClick={() => setMenuOpen(false)}>
+        GOWN SETS
+      </Link>
+    </motion.div>
+  )}
+
+  {/* SHOP BY OCCASION */}
+  <button
+    onClick={() => setOccasionOpen(!occasionOpen)}
+    className="flex justify-between items-center"
+  >
+    SHOP BY OCCASION
+
+      <ChevronRight
+                      className={`transition-transform duration-300 transform  text-black ${
+                         occasionOpen ? "rotate-90" : ""
+                      }`}
+                      size={18}
+                    />
+  </button>
+
+  {occasionOpen && (
+    <motion.div
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: "auto", opacity: 1 }}
+      className="flex flex-col gap-3 ml-4 text-base"
+    >
+      {[
+        "WORK WEAR",
+        "SUMMER MOMENTS",
+        "EVERYDAY EASE",
+        "COTTON DAYS",
+        "MEHENDI",
+        "HALDI",
+        "SANGEET",
+        "THE SHAADI EDIT",
+        "FESTIVE COLLECTION",
+        "GIFTING"
+      ].map((item, i) => (
+        <Link
+          key={i}
+          href={`/products?occasion=${item}`}
+          onClick={() => setMenuOpen(false)}
         >
-          {menuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
+          {item}
+        </Link>
+      
+      ))}
+   
+    </motion.div>
+  )}
+     <Link href="/my-orders" onClick={() => setMenuOpen(false)}>
+    TRACK YOUR ORDER
+  </Link>
+</motion.nav>
+        </div>
       </div>
 
-      {/* Mobile Dropdown Menu */}
+      {/* BACKDROP */}
       {menuOpen && (
-        <div className="md:hidden bg-white shadow-lg border-t">
-          <nav className="flex flex-col px-6 py-4 space-y-3 text-gray-700 font-medium">
-            <Link href="/" onClick={() => setMenuOpen(false)}>
-              Home
-            </Link>
-
-            <Link href="/products" onClick={() => setMenuOpen(false)}>
-              Products
-            </Link>
-
-            <Link href="/my-orders">My Orders</Link>
-
-            <Link href="/cart" onClick={() => setMenuOpen(false)}>
-              🛒 Cart ({totalItems})
-            </Link>
-          </nav>
-        </div>
+        <div
+          className="fixed inset-0 bg-black/50 z-40"
+          onClick={() => setMenuOpen(false)}
+        />
       )}
-    </header>
+    </>
   );
 }

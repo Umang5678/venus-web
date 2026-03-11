@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { getCachedProduct, setCachedProduct } from "@/src/lib/productCache";
+import SizeGuide from "@/src/components/SizeGuide";
 import "swiper/css";
 import { useRef } from "react";
 import Image from "next/image";
@@ -10,6 +12,7 @@ import {
   ShoppingBag,
   Truck,
   ShieldCheck,
+  ChevronRight,
   Heart,
   Share2,
 } from "lucide-react";
@@ -24,10 +27,27 @@ export default function ProductDetailsPage() {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [imageLoading, setImageLoading] = useState(true);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
   const { addToCart } = useCart();
   const swiperRef = useRef<any>(null);
+  const [openSection, setOpenSection] = useState<string | null>(null);
+
+  const toggleSection = (section: string) => {
+    setOpenSection(openSection === section ? null : section);
+  };
   useEffect(() => {
     if (!id) return;
+
+    const cached = getCachedProduct(id as string);
+
+    // ✅ If product already prefetched
+    if (cached) {
+      setProduct(cached);
+      setLoading(false);
+      return;
+    }
+
     const fetchProduct = async () => {
       try {
         const res = await API.get(`/products/${id}`);
@@ -41,13 +61,18 @@ export default function ProductDetailsPage() {
             ? res.data.size.flat(Infinity)
             : [],
         };
+
         setProduct(productData);
+
+        // ✅ Save to cache
+        setCachedProduct(id as string, productData);
       } catch (err) {
         console.error("❌ Error fetching product:", err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchProduct();
   }, [id]);
 
@@ -61,7 +86,7 @@ export default function ProductDetailsPage() {
     addToCart({
       _id: product._id,
       name: product.name,
-      price: product.price,
+      price: product.finalPrice,
       image: product.images?.[0],
       quantity: 1,
       size: selectedSize || "Default",
@@ -75,19 +100,30 @@ export default function ProductDetailsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white pt-24 pb-12 px-4 md:px-8">
+      <div className="min-h-screen bg-[#FAFAFA] pt-24 pb-12 px-4">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className="bg-gray-100 rounded-3xl aspect-[3/4] animate-pulse" />
-          <div className="space-y-6 pt-8">
-            <div className="h-8 bg-gray-100 rounded w-1/3 animate-pulse" />
-            <div className="h-12 bg-gray-100 rounded w-3/4 animate-pulse" />
-            <div className="h-6 bg-gray-100 rounded w-full animate-pulse" />
+          {/* Image skeleton */}
+          <div className="rounded-2xl bg-gray-200 aspect-[3/4] animate-pulse" />
+
+          {/* Content skeleton */}
+          <div className="space-y-6">
+            <div className="h-6 w-24 bg-gray-200 rounded animate-pulse" />
+            <div className="h-10 w-3/4 bg-gray-200 rounded animate-pulse" />
+            <div className="h-6 w-40 bg-gray-200 rounded animate-pulse" />
+            <div className="h-24 w-full bg-gray-200 rounded animate-pulse" />
+
+            <div className="flex gap-2">
+              <div className="h-12 w-16 bg-gray-200 rounded animate-pulse" />
+              <div className="h-12 w-16 bg-gray-200 rounded animate-pulse" />
+              <div className="h-12 w-16 bg-gray-200 rounded animate-pulse" />
+            </div>
+
+            <div className="h-14 w-full bg-gray-200 rounded animate-pulse" />
           </div>
         </div>
       </div>
     );
   }
-
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 text-center">
@@ -95,8 +131,8 @@ export default function ProductDetailsPage() {
           Product Not Found
         </h2>
         <button
-          onClick={() => router.back()}
-          className="text-pink-600 hover:text-pink-700 font-medium flex items-center gap-2"
+          onClick={() => router.push("/products")}
+          className="text-purple-600 hover:text-purple-700 font-medium flex items-center gap-2"
         >
           <ArrowLeft size={20} /> Go Back
         </button>
@@ -114,20 +150,23 @@ export default function ProductDetailsPage() {
           onClick={() => router.back()}
           className="group flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
         >
-          <div className="p-2 bg-white rounded-full border border-gray-200 mr-3 group-hover:border-pink-400 transition-colors">
-            <ArrowLeft size={16} className="text-pink-600" />
+          <div className="p-2 bg-white rounded-full border border-gray-200 mr-3 group-hover:border-purple-400 transition-colors">
+            <ArrowLeft size={16} className="text-purple-600" />
           </div>
           Back to Collection
         </button>
       </div>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16">
+        <div
+          className="grid grid-cols-1 lg:grid-cols-2 gap-5
+         xl:gap-16"
+        >
           {/* LEFT: IMAGE */}
           <div className="relative flex justify-center">
             <div className="lg:sticky lg:top-24 w-full max-w-md md:max-w-lg space-y-4">
               {/* Mobile Slider */}
-              {/* Mobile Slider */}
+
               <div className="block md:hidden">
                 <Swiper
                   spaceBetween={10}
@@ -142,6 +181,7 @@ export default function ProductDetailsPage() {
                       <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-white shadow-md">
                         <Image
                           src={img}
+                          loading="lazy"
                           alt="product"
                           fill
                           className="object-cover"
@@ -162,12 +202,13 @@ export default function ProductDetailsPage() {
                       }}
                       className={`relative w-16 h-20 rounded-lg overflow-hidden cursor-pointer border-2 ${
                         selectedImage === index
-                          ? "border-pink-600"
+                          ? "border-black"
                           : "border-gray-200"
                       }`}
                     >
                       <Image
                         src={img}
+                        loading="lazy"
                         alt="thumbnail"
                         fill
                         className="object-cover"
@@ -179,11 +220,20 @@ export default function ProductDetailsPage() {
               {/* Desktop Image */}
               <div className="hidden md:block">
                 <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-white shadow-md group">
+                  {/* Shimmer Loader */}
+                  {imageLoading && (
+                    <div className="absolute inset-0 shimmer rounded-2xl"></div>
+                  )}
+
                   <Image
                     src={product.images?.[selectedImage] || "/placeholder.jpg"}
                     alt={product.name}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-125"
+                    priority
+                    onLoadingComplete={() => setImageLoading(false)}
+                    className={`object-cover transition-transform duration-500 group-hover:scale-125 ${
+                      imageLoading ? "opacity-0" : "opacity-100"
+                    }`}
                   />
                 </div>
 
@@ -196,14 +246,15 @@ export default function ProductDetailsPage() {
                         onClick={() => setSelectedImage(index)}
                         className={`relative w-20 h-24 rounded-lg overflow-hidden cursor-pointer border-2 ${
                           selectedImage === index
-                            ? "border-pink-600"
-                            : "border-gray-200 hover:border-pink-400"
+                            ? "border-black"
+                            : "border-gray-200 hover:border-black-400"
                         }`}
                       >
                         <Image
                           src={img}
                           alt="product"
                           fill
+                          onLoadingComplete={() => setImageLoading(false)}
                           className="object-cover"
                         />
                       </div>
@@ -214,40 +265,43 @@ export default function ProductDetailsPage() {
             </div>
           </div>
           {/* RIGHT: DETAILS */}
-          <div className="flex flex-col pt-4 lg:pt-8">
+          <div className="flex flex-col pt-1 lg:pt-8">
             {/* Header */}
             <div className="mb-6 border-b border-gray-100 pb-6">
-              <span className="px-3 py-1 bg-pink-100 text-pink-600 text-xs font-semibold uppercase rounded-full mb-2 inline-block">
+              <span className="px-3 py-1 bg-purple-100 text-purple-600 text-xs font-semibold uppercase rounded-full mb-2 inline-block">
                 New Arrival
               </span>
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 leading-snug">
+              <h1 className="font-sans text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 mb-3 leading-snug tracking-tight line-clamp-2">
                 {product.name}
               </h1>
-              <div className="flex flex-wrap items-baseline gap-3">
-                <p className="text-3xl sm:text-4xl font-semibold text-gray-900">
-                  ₹{product.price}
-                </p>
-                <p className="text-lg sm:text-xl text-gray-400 line-through">
-                  ₹{Math.round(product.price * 1.2)}
-                </p>
-                <span className="text-pink-600 text-sm font-semibold">
-                  20% OFF
+              <div className="flex items-center gap-3 mt-2 flex-wrap">
+                <span className="text-2xl font-bold text-black">
+                  ₹{product.finalPrice ?? product.price}
                 </span>
+
+                {product.discount > 0 && (
+                  <>
+                    <span className="text-gray-400 line-through text-sm">
+                      ₹{product.price}
+                    </span>
+
+                    <span className="bg-red-100 text-red-500 text-xs font-semibold px-2 py-1 rounded">
+                      {product.discount}% OFF
+                    </span>
+                  </>
+                )}
               </div>
             </div>
-
-            {/* Description */}
-            <p className="text-gray-600 text-base sm:text-lg mb-8 leading-relaxed">
-              {product.description ||
-                "Beautifully designed outfit, crafted for elegance and comfort. This piece combines modern aesthetics with timeless style."}
-            </p>
 
             {/* ✅ Show Size Selector ONLY if sizes exist */}
             {hasSizes && (
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-3">
                   <h3 className="font-semibold text-gray-900">Select Size</h3>
-                  <button className="text-sm text-pink-600 hover:underline">
+                  <button
+                    onClick={() => setShowSizeGuide(true)}
+                    className="text-sm text-red-500 hover:text-pink-700 font-medium hover:underline"
+                  >
                     Size Guide
                   </button>
                 </div>
@@ -268,8 +322,8 @@ export default function ProductDetailsPage() {
                           flex items-center justify-center
                           ${
                             isSelected
-                              ? "border-pink-600 bg-pink-600 text-white shadow-lg scale-95"
-                              : "bg-white border-gray-200 text-gray-600 hover:border-pink-400 hover:text-pink-600"
+                              ? "border-purple-800 bg-purple-900 text-white shadow-lg scale-95"
+                              : "bg-white border-gray-200 text-gray-600 hover:border-purple-400 hover:text-purple-600"
                           }`}
                       >
                         {sizeLabel}
@@ -287,10 +341,23 @@ export default function ProductDetailsPage() {
             )}
 
             {/* Add to Cart */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-10">
+            <div className="flex flex-col sm:flex-row gap-2 ">
               <button
                 onClick={handleAddToCart}
-                className="flex-1 bg-pink-600 text-white h-14 rounded-2xl font-semibold text-lg flex items-center justify-center gap-3 hover:bg-pink-700 active:scale-95 transition-all shadow-lg"
+                className="
+    w-full sm:flex-1
+    bg-purple-900 text-white
+    py-3 sm:py-4
+    px-4 sm:px-6
+    rounded-xl
+    font-semibold
+    text-sm sm:text-base lg:text-lg
+    flex items-center justify-center gap-2
+    hover:bg-purple-700
+    transition
+    active:scale-95
+    shadow-md
+  "
               >
                 <ShoppingBag size={20} />
                 Add to Cart
@@ -298,37 +365,127 @@ export default function ProductDetailsPage() {
             </div>
 
             {/* Trust Badges */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 pt-6 border-t border-gray-100">
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-pink-50 text-pink-600 rounded-lg">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 pt-6 border-t border-gray-100">
+              {/* Free Shipping */}
+              <div className="flex items-center gap-3 p-3 sm:p-4 rounded-xl border border-gray-200 bg-white hover:shadow-md transition">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-purple-100 text-purple-600">
                   <Truck size={20} />
                 </div>
+
                 <div>
-                  <h4 className="font-semibold text-gray-900 text-sm">
+                  <h4 className="font-semibold text-gray-900 text-xs sm:text-sm">
                     Free Shipping
                   </h4>
-                  <p className="text-xs text-gray-500 mt-1">
-                    On all orders over ₹999
+                  <p className="text-[11px] sm:text-xs text-gray-500">
+                    Orders over ₹999
                   </p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-pink-50 text-pink-600 rounded-lg">
+
+              {/* Secure Payment */}
+              <div className="flex items-center gap-3 p-3 sm:p-4 rounded-xl border border-gray-200 bg-white hover:shadow-md transition">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-purple-100 text-purple-600">
                   <ShieldCheck size={20} />
                 </div>
+
                 <div>
-                  <h4 className="font-semibold text-gray-900 text-sm">
+                  <h4 className="font-semibold text-gray-900 text-xs sm:text-sm">
                     Secure Payment
                   </h4>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-[11px] sm:text-xs text-gray-500">
                     100% secure checkout
                   </p>
                 </div>
               </div>
             </div>
+
+            {/* PRODUCT DETAILS ACCORDION */}
+
+            <div className="border-t border-gray-200 mt-6">
+              {/* SPECIFICATIONS */}
+              <button
+                onClick={() => toggleSection("spec")}
+                className="w-full flex justify-between items-center py-4 text-left"
+              >
+                <span className="text-sm tracking-widest font-semibold text-gray-800">
+                  SPECIFICATIONS
+                </span>
+
+                <ChevronRight
+                  className={`transition-transform duration-300 transform  text-black ${
+                    openSection === "spec" ? "rotate-90" : ""
+                  }`}
+                  size={18}
+                />
+              </button>
+              {openSection === "spec" && (
+                <div className="pb-4 text-gray-600 text-sm leading-relaxed animate-fadeIn">
+                  {product.description}
+                </div>
+              )}
+              <div className="border-t border-gray-200"></div>
+              {/* SELLER INFORMATION */}
+              {/* SELLER INFORMATION */}
+              <button
+                onClick={() => toggleSection("seller")}
+                className="w-full flex justify-between items-center py-4 text-left"
+              >
+                <span className="text-sm tracking-widest font-semibold text-gray-800">
+                  SELLER INFORMATION
+                </span>
+
+                <ChevronRight
+                  className={`transition-transform duration-300 transform text-black ${
+                    openSection === "seller" ? "rotate-90" : ""
+                  }`}
+                  size={18}
+                />
+              </button>
+
+              {openSection === "seller" && (
+                <div className="pb-4 text-gray-600 text-sm leading-relaxed space-y-4 animate-fadeIn">
+                  <div>
+                    <p className="font-semibold">Manufactured & Marketed by</p>
+                    <p>Zivore Apparel Private Limited</p>
+                    <p>
+                      Address: B 005, Sector 85, Noida, Gautam Buddha Nagar,
+                      Uttar Pradesh, 201301
+                    </p>
+                    <p>Country Of Origin: India</p>
+                  </div>
+
+                  <div>
+                    <p className="font-semibold">Consumer Care Details</p>
+                    <p>Zivore Apparel Private Limited</p>
+                    <p>
+                      Address: B 005, Sector 85, Noida, Gautam Buddha Nagar,
+                      Uttar Pradesh, 201301
+                    </p>
+                    <p>Email: care@libas.in</p>
+                    <p>Call: +91 9899990772</p>
+                    <p>WhatsApp: +91 9205222171</p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </main>
+      {/* SIZE GUIDE MODAL */}
+      {showSizeGuide && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 relative">
+            <button
+              onClick={() => setShowSizeGuide(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-black"
+            >
+              ✕
+            </button>
+
+            <SizeGuide />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

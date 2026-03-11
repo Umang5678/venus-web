@@ -1,57 +1,45 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-
-const slides = [
-  { image: "/images/hero1.jpg", text: "Elegant Lehengas for Every Occasion" },
-  { image: "/images/hero2.jpg", text: "Graceful Sarees, Crafted with Love" },
-  { image: "/images/hero3.jpg", text: "Trendy Gowns for Modern Queens" },
-  { image: "/images/hero4.jpg", text: "Beautiful Chaniya Cholis to Shine" },
-];
+import Image from "next/image";
 
 export default function Hero() {
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(
-      () => setCurrent((prev) => (prev + 1) % slides.length),
-      4000
-    );
-    return () => clearInterval(interval);
-  }, []);
-
   return (
-    <section className="relative h-[60vh] w-full overflow-hidden">
-      {/* Background Images */}
-      {slides.map((slide, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 transition-opacity duration-1000 ${
-            index === current ? "opacity-100" : "opacity-0"
-          }`}
-          style={{
-            backgroundImage: `url(${slide.image})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
+    <section className="w-full relative">
+      {/* Mobile Image */}
+      <div className="block md:hidden">
+        <Image
+          src="/images/herom.jpg"
+          alt="Hero Mobile"
+          width={1080}
+          height={1600}
+          quality={100}
+          className="w-full h-auto"
+          priority
         />
-      ))}
+      </div>
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/40" />
+      {/* Desktop Image */}
+      <div className="hidden md:block">
+        <Image
+          src="/images/herod1.png"
+          alt="Hero"
+          width={3840}
+          height={1600}
+          quality={100}
+          priority
+          className="w-full h-auto"
+        />
+      </div>
 
-      {/* Text + Button */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          {slides[current].text}
-        </h1>
-        <Link
-          href="/products"
-          className="bg-pink-500 hover:bg-pink-600 text-white font-semibold px-6 py-3 rounded-lg transition"
-        >
-          Shop Now
-        </Link>
+      {/* Vertical Text */}
+      <div className="absolute -right-4 md:right-0 lg:-right-10 top-1/2 -translate-y-1/2">
+        {/* Desktop Vertical */}
+        <p className="hidden md:block text-white tracking-[10px] text-lg rotate-90">
+          SEASONS · STYLE · SIGNATURES
+        </p>
+
+        {/* Mobile Horizontal */}
+        <p className="md:hidden text-white text-xs tracking-[4px] rotate-90">
+          SEASONS · STYLE · SIGNATURES
+        </p>
       </div>
     </section>
   );

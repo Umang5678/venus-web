@@ -1,60 +1,99 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 
 const collections = [
-  {
-    name: "Chaniya Choli",
-    image: "/images/2.png",
-    link: "/products?category=Chaniya Choli",
-  },
-  {
-    name: "Kurti Pair",
-    image: "/images/3.png",
-    link: "/products?category=Kurti Pair",
-  },
-  {
-    name: "gown Sets",
-    image: "/images/4.png",
-    link: "/products?category=Gown Sets",
-  },
+  { name: "CO-ORDS", image: "/images/c1.png", link: "/products?category=Co-ords" },
+  { name: "TOP & TUNICS", image: "/images/c2.png", link: "/products?category=Top Tunics" },
+  { name: "KURTAS", image: "/images/c2.png", link: "/products?category=Kurtas" },
+  { name: "SUIT SETS", image: "/images/c1.png", link: "/products?category=Suit Sets" },
+  { name: "KURTA SETS", image: "/images/c1.png", link: "/products?category=Kurta Sets" },
+  { name: "KURTAA", image: "/images/c2.png", link: "/products?category=Kurtaa" },
 ];
 
 export default function Collections() {
+
+  // Split categories into groups of 4
+  const slides = [];
+  for (let i = 0; i < collections.length; i += 4) {
+    slides.push(collections.slice(i, i + 4));
+  }
+
   return (
-    <section className="py-18 bg-white relative z-10 ">
-      <div
-        className="
-          flex gap-5 px-4 sm:px-6
-          overflow-x-auto sm:flex-wrap sm:justify-center
-          scroll-smooth scrollbar-hide pt-4
-        "
-      >
-        {collections.map((c, i) => (
-          <motion.div
+    <section className="py-8 bg-gray-50">
+
+      {/* Title */}
+      <div className="text-center mb-6">
+        <h2 className="text-lg md:text-2xl font-semibold tracking-wide text-gray-800">
+          SHOP BY CATEGORY
+        </h2>
+      </div>
+
+      {/* Mobile Slider */}
+      <div className="flex overflow-x-auto gap-12 px-12 md:hidden">
+
+        {slides.map((group, i) => (
+          <div
             key={i}
-            whileHover={{ scale: 1.08 }}
-            transition={{ type: "spring", stiffness: 300 }}
-            className="flex-shrink-0 flex flex-col items-center text-center cursor-pointer"
+            className="grid grid-cols-2 gap-4 min-w-full"
           >
-            <Link href={c.link}>
-              <div className="w-20 h-20 sm:w-28 sm:h-28 border-2 border-pink-300 rounded-full overflow-hidden flex items-center justify-center shadow-md hover:border-pink-500 transition">
+            {group.map((c, j) => (
+              <Link
+                key={j}
+                href={c.link}
+                className="relative h-[160px] rounded-xl overflow-hidden shadow-sm"
+              >
                 <Image
                   src={c.image}
                   alt={c.name}
-                  width={120}
-                  height={120}
-                  className="object-cover w-full h-full"
+                  fill
+                  className="object-cover"
                 />
-              </div>
-              <p className="mt-2 text-xs sm:text-sm font-medium text-gray-700 hover:text-pink-600 whitespace-nowrap">
-                {c.name}
-              </p>
-            </Link>
-          </motion.div>
+<div className="absolute bottom-2 left-1/2 -translate-x-1/2 
+bg-white/30 backdrop-blur-md px-4 py-1 rounded-full 
+text-white tracking-widest text-[10px] font-semibold 
+whitespace-nowrap">
+  {c.name}
+</div>
+              </Link>
+            ))}
+          </div>
         ))}
+
       </div>
+
+   {/* Desktop Slider */}
+<div className="hidden md:flex gap-6 overflow-x-auto px-6 max-w-7xl mx-auto scrollbar-hide">
+
+  {collections.map((c, i) => (
+    <Link
+      key={i}
+      href={c.link}
+      className="
+        relative
+        min-w-[220px]
+        h-[320px]
+        rounded-xl
+        overflow-hidden
+        shadow-sm
+        flex-shrink-0
+      "
+    >
+      <Image
+        src={c.image}
+        alt={c.name}
+        fill
+        className="object-cover"
+      />
+
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-white/30 backdrop-blur-md px-4 py-1 rounded-full text-white tracking-widest text-xs font-semibold whitespace-nowrap">
+        {c.name}
+      </div>
+
+    </Link>
+  ))}
+
+</div>
     </section>
   );
 }

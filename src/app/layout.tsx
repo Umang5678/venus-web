@@ -5,10 +5,18 @@ import { CartProvider } from "./../context/CartContext";
 import Header from "./../components/Header";
 import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop/page";
+import { Toaster } from "react-hot-toast";
+import { Inter } from "next/font/google";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
 });
 
 const geistMono = Geist_Mono({
@@ -29,8 +37,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Toaster position="top-right" />
         <CartProvider>
           {" "}
           <Header />
