@@ -15,7 +15,11 @@ export default function ProductsPage() {
   useEffect(() => {
     const cacheKey = `products-${category || "all"}-${occasion || "none"}`;
 
-    const cached = sessionStorage.getItem(cacheKey);
+    let cached = null;
+
+    if (typeof window !== "undefined") {
+      cached = sessionStorage.getItem(cacheKey);
+    }
 
     if (cached) {
       setProducts(JSON.parse(cached));
@@ -43,8 +47,9 @@ export default function ProductsPage() {
 
         setProducts(formattedProducts);
 
-        // save to cache
-        sessionStorage.setItem(cacheKey, JSON.stringify(formattedProducts));
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem(cacheKey, JSON.stringify(formattedProducts));
+        }
       } catch (err) {
         console.error("Error fetching products:", err);
         setProducts([]);
@@ -55,6 +60,7 @@ export default function ProductsPage() {
 
     fetchProducts();
   }, [category, occasion]);
+
   if (loading)
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-100">
@@ -75,7 +81,6 @@ export default function ProductsPage() {
       </h1>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* ✅ Responsive Grid — 2x2 on mobile, 3x3 on tablet, 4x4 on large */}
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {products.map((p) => (
             <div
