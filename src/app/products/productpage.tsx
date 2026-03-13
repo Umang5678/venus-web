@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import API from "./../../lib/api";
 import { useSearchParams } from "next/navigation";
-import ProductCard from "@/src/components/ProductCard";
+import ProductCard from "./../../components/ProductCard";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
