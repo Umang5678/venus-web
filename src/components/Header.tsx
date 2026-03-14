@@ -90,7 +90,14 @@ export default function Header() {
             />
 
             {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              <span
+                className={`absolute -top-2 -right-2 text-xs rounded-full w-5 h-5 flex items-center justify-center
+  ${
+    pathname === "/" && !scrolled
+      ? "bg-white text-black"
+      : "bg-black text-white"
+  }`}
+              >
                 {totalItems}
               </span>
             )}

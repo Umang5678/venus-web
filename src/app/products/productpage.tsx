@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import API from "./../../lib/api";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "./../../components/ProductCard";
 
@@ -81,16 +82,34 @@ export default function ProductsPage() {
       </h1>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-          {products.map((p) => (
-            <div
-              key={p._id}
-              className="bg-white rounded-xs shadow-md hover:shadow-xl transition transform hover:-translate-y-1 border border-gray-100 overflow-hidden"
-            >
-              <ProductCard product={p} />
-            </div>
-          ))}
-        </div>
+        {products.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <Image
+              src="/images/no-item.png"
+              alt="No products found"
+              width={300}
+              height={300}
+              className="mb-6 opacity-90"
+            />
+
+            <h2 className="text-xl font-semibold text-gray-700">
+              No Products Found
+            </h2>
+
+            <p className="text-gray-500 mt-2">New styles are coming soon.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {products.map((p) => (
+              <div
+                key={p._id}
+                className="bg-white rounded-xs shadow-md hover:shadow-xl transition transform hover:-translate-y-1 border border-gray-100 overflow-hidden"
+              >
+                <ProductCard product={p} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ const moods = [
 
 export default function ShopByMood() {
   return (
-    <section className="bg-gray-100 py-8 px-4">
+    <section className="bg-gray-100 py-8 ">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-center text-xl md:text-2xl tracking-widest font-medium mb-10">
           SHOP BY MOOD

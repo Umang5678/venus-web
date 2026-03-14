@@ -107,6 +107,7 @@ export default function ProductDetailsPage() {
     setSelectedSize((prev) => (prev === sizeLabel ? null : sizeLabel));
     setErrorMsg(null);
   };
+
   useEffect(() => {
     if (!product) return;
 
@@ -183,7 +184,7 @@ export default function ProductDetailsPage() {
   }
 
   const hasSizes = product.size && product.size.length > 0;
-
+  const isNewArrival = product?.occasion?.includes("NEW IN");
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       {/* Back Button */}
@@ -244,7 +245,7 @@ export default function ProductDetailsPage() {
                       }}
                       className={`relative w-16 h-20 rounded-lg overflow-hidden cursor-pointer border-2 ${
                         selectedImage === index
-                          ? "border-black"
+                          ? "border-gray-400"
                           : "border-gray-200"
                       }`}
                     >
@@ -288,7 +289,7 @@ export default function ProductDetailsPage() {
                         onClick={() => setSelectedImage(index)}
                         className={`relative w-20 h-24 rounded-lg overflow-hidden cursor-pointer border-2 ${
                           selectedImage === index
-                            ? "border-black"
+                            ? "border-gray-400"
                             : "border-gray-200 hover:border-black-400"
                         }`}
                       >
@@ -310,9 +311,11 @@ export default function ProductDetailsPage() {
           <div className="flex flex-col pt-1 lg:pt-8">
             {/* Header */}
             <div className="mb-6 border-b border-gray-100 pb-6">
-              <span className="px-3 py-1 bg-purple-100 text-purple-600 text-xs font-semibold uppercase rounded-full mb-2 inline-block">
-                New Arrival
-              </span>
+              {isNewArrival && (
+                <span className="px-3 py-1 bg-purple-100 text-purple-600 text-xs font-semibold uppercase rounded-full mb-2 inline-block">
+                  New Arrival
+                </span>
+              )}
               <h1 className="font-sans text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 mb-3 leading-snug tracking-tight line-clamp-2">
                 {product.name}
               </h1>

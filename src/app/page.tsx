@@ -37,6 +37,7 @@ import ProductCard from "../components/ProductCard";
 import Hero from "./../components/Hero";
 import Collections from "../components/Collections";
 import ShopByMood from "../components/shop-by-mood";
+import TrustFeatures from "../components/TrustFeatures";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -58,14 +59,7 @@ export default function Home() {
       <Hero />
       <Collections />
       <ShopByMood />
-      {/* Product Grid */}
-      {/* <section className="max-w-7xl mx-auto px-4 py-1">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {products.map((p: any) => (
-            <ProductCard key={p._id} product={p} />
-          ))}
-        </div>
-      </section> */}
+      <TrustFeatures />
     </div>
   );
 }

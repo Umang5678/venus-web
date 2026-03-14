@@ -59,6 +59,7 @@ interface ProductProps {
     discount?: number;
     finalPrice?: number;
     images?: string[];
+    occasion?: string[];
   };
 }
 export default function ProductCard({ product }: ProductProps) {
@@ -70,6 +71,7 @@ export default function ProductCard({ product }: ProductProps) {
       console.error("Prefetch product failed");
     }
   };
+  const isNew = product.occasion?.includes("NEW IN");
 
   return (
     <Link
@@ -91,6 +93,11 @@ export default function ProductCard({ product }: ProductProps) {
           sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
+        {isNew && (
+          <div className="absolute top-1.5 left-1.5 bg-white/50 backdrop-blur-sm text-purple-700 text-[10px] px-2 py-[2px] rounded-full font-semibold shadow-sm">
+            NEW IN
+          </div>
+        )}
 
         {product.discount && product.discount > 0 && (
           <div
