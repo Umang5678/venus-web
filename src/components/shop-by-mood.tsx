@@ -2,23 +2,24 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const moods = [
   {
-    title: "EVERYDAY",
-    subtitle: "EASE",
+    title: "EVERYDAY EASE",
+    subtitle: "Effortless casual styles",
     slug: "everyday-ease",
     image: "/images/herom.jpg",
   },
   {
-    title: "WORK",
-    subtitle: "FLOW",
+    title: "WORK FLOW",
+    subtitle: "Sharp, elegant formal coordinates",
     slug: "work-wear",
     image: "/images/c1.png",
   },
   {
-    title: "SUMMER",
-    subtitle: "WARE",
+    title: "SUMMER MOMENTS",
+    subtitle: "Lighter fabrics for sunny days",
     slug: "summer-moments",
     image: "/images/c2.png",
   },
@@ -26,39 +27,53 @@ const moods = [
 
 export default function ShopByMood() {
   return (
-    <section className="bg-gray-100 py-8 ">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-center text-xl md:text-2xl tracking-widest font-medium mb-10">
-          SHOP BY MOOD
-        </h2>
+    <section className="bg-ivory/20 py-4 md:py-6 border-t border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Title */}
+        <div className="text-center mb-12">
+          <h2 className="font-serif text-3xl md:text-4xl tracking-widest font-semibold text-primary mb-3">
+            SHOP BY MOOD
+          </h2>
+          <div className="w-12 h-[1.5px] bg-gold mx-auto"></div>
+          <p className="text-xs text-gray-500 font-medium tracking-[0.15em] mt-3 uppercase">
+            Match your style to the occasion
+          </p>
+        </div>
 
-        <div className="flex md:grid md:grid-cols-3 gap-4 overflow-x-auto md:overflow-visible scrollbar-hide">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {moods.map((mood) => (
-            <Link
+            <motion.div
               key={mood.slug}
-              href={`/products/occasion/${mood.slug}`}
-              className="relative rounded-2xl overflow-hidden group min-w-[260px] md:min-w-0"
+              whileHover={{ y: -6 }}
+              transition={{ duration: 0.3 }}
+              className="relative rounded-lg overflow-hidden group border border-gray-100 shadow-sm"
             >
-              <div className="relative w-full h-[500px]">
+              <Link href={`/products?occasion=${mood.title}`} className="block relative w-full h-[450px] md:h-[500px]">
+                {/* Image */}
                 <Image
                   src={mood.image}
                   alt={mood.title}
                   fill
-                  className="object-cover transition duration-500 group-hover:scale-110"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
-              </div>
 
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
-                <div className="bg-white/40 backdrop-blur-md border border-white/40 text-white px-6 py-2 rounded-lg text-center">
-                  <p className="font-semibold tracking-widest text-sm">
-                    {mood.title}
-                  </p>
-                  <p className="text-xs tracking-widest opacity-80">
-                    · {mood.subtitle} ·
-                  </p>
+                {/* Gradient shading overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent group-hover:via-black/20 transition-all duration-300" />
+
+                {/* Badge Overlay */}
+                <div className="absolute bottom-8 inset-x-4 flex justify-center">
+                  <div className="w-full max-w-[280px] bg-black/30 backdrop-blur-md border border-white/20 text-white px-6 py-4 rounded-none text-center group-hover:bg-white group-hover:text-black transition-all duration-300">
+                    <p className="font-serif text-sm font-semibold tracking-[0.15em] uppercase">
+                      {mood.title}
+                    </p>
+                    <div className="w-8 h-[1px] bg-white/50 group-hover:bg-black/50 mx-auto my-2 transition-all"></div>
+                    <p className="text-[10px] tracking-widest text-white/80 group-hover:text-black/80 font-medium uppercase">
+                      {mood.subtitle}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </div>

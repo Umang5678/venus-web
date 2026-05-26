@@ -7,6 +7,10 @@ const nextConfig = {
       "localhost", // optional for dev testing
     ],
   },
+  experimental: {
+    // Disable webpack build workers to prevent "Out of Memory" crashes on low RAM devices
+    webpackBuildWorker: false,
+  },
 };
 
 export default nextConfig;

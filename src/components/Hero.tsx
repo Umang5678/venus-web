@@ -56,7 +56,7 @@ export default function Hero() {
           alt="Hero Mobile"
           width={1080}
           height={1600}
-          quality={100}
+          quality={85}
           className="w-full h-auto"
           priority
         />
@@ -69,7 +69,7 @@ export default function Hero() {
           alt="Hero"
           width={3840}
           height={1600}
-          quality={100}
+          quality={85}
           priority
           className="w-full h-auto"
         />

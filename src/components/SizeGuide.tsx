@@ -129,7 +129,7 @@ export default function SizeGuide() {
   const [unit, setUnit] = useState("inch");
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+    <div className="w-full mx-auto py-2">
       {/* ===== Measurement Guide Image ===== */}
       <div className="flex justify-center">
         <div className="w-full max-w-sm sm:max-w-md md:max-w-lg">
