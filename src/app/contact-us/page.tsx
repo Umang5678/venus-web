@@ -56,13 +56,13 @@ export default function ContactUsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FCFAF6] pt-24 pb-28 font-sans text-gray-900 overflow-x-hidden">
+    <div className="relative min-h-screen w-full bg-white pt-24 pb-28 font-sans text-gray-900 overflow-x-hidden">
       
       {/* Visual Background Accent Blurs */}
       <div className="absolute top-20 left-1/4 w-[500px] h-[500px] bg-amber-100/30 rounded-full blur-[120px] pointer-events-none -z-10" />
       <div className="absolute bottom-20 right-1/4 w-[400px] h-[400px] bg-purple-100/20 rounded-full blur-[100px] pointer-events-none -z-10" />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Editorial Breadcrumbs */}
         <motion.div 
@@ -70,7 +70,7 @@ export default function ContactUsPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-2 text-[10px] text-gray-400 uppercase tracking-[0.25em] mb-12"
         >
-          <Link href="/" className="hover:text-gold transition">
+          <Link href="/" className="hover:text-primary transition">
             Home
           </Link>
           <span>/</span>
@@ -87,14 +87,14 @@ export default function ContactUsPage() {
           
           {/* Section Header */}
           <motion.div variants={itemVariants} className="text-center max-w-2xl mx-auto space-y-4">
-            <span className="text-[10px] text-gold font-bold uppercase tracking-[0.3em]">Connect With Us</span>
+            <span className="text-[10px] text-primary font-bold uppercase tracking-[0.3em]">Connect With Us</span>
             <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-light tracking-wide text-primary leading-tight">
               Get in Touch
             </h1>
             <p className="text-xs text-gray-400 font-medium tracking-widest leading-relaxed uppercase">
               We would love to hear from you. Reach out for styling advice, order details, or just to say hello.
             </p>
-            <div className="w-12 h-[1px] bg-gold/50 mx-auto pt-2"></div>
+            <div className="w-12 h-[1px] bg-primary/30 mx-auto pt-2"></div>
           </motion.div>
 
           {/* Core Interactive Layout Split */}
@@ -112,9 +112,9 @@ export default function ContactUsPage() {
                 whileHover={{ y: -4 }}
                 className="block p-6 bg-white/60 backdrop-blur-md border border-gray-100/50 shadow-sm hover:shadow-md transition-all duration-300 relative group cursor-pointer"
               >
-                <div className="absolute top-0 left-0 w-[2px] h-full bg-gold scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom" />
+                <div className="absolute top-0 left-0 w-[2px] h-full bg-primary scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom" />
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gold/5 text-gold flex items-center justify-center group-hover:bg-gold group-hover:text-white transition-colors duration-300">
+                  <div className="w-10 h-10 rounded-full bg-primary/5 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                     <Mail size={16} />
                   </div>
                   <div>
@@ -130,9 +130,9 @@ export default function ContactUsPage() {
                 whileHover={{ y: -4 }}
                 className="block p-6 bg-white/60 backdrop-blur-md border border-gray-100/50 shadow-sm hover:shadow-md transition-all duration-300 relative group cursor-pointer"
               >
-                <div className="absolute top-0 left-0 w-[2px] h-full bg-gold scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom" />
+                <div className="absolute top-0 left-0 w-[2px] h-full bg-primary scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom" />
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gold/5 text-gold flex items-center justify-center group-hover:bg-gold group-hover:text-white transition-colors duration-300">
+                  <div className="w-10 h-10 rounded-full bg-primary/5 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                     <Phone size={16} />
                   </div>
                   <div>
@@ -148,7 +148,7 @@ export default function ContactUsPage() {
                 className="p-6 bg-white/60 backdrop-blur-md border border-gray-100/50 shadow-sm transition-all duration-300 relative group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gold/5 text-gold flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-primary/5 text-primary flex items-center justify-center">
                     <Clock size={16} />
                   </div>
                   <div>
@@ -166,7 +166,7 @@ export default function ContactUsPage() {
                     href="https://www.instagram.com/venusfashion2020"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center w-11 h-11 bg-white border border-gray-100 hover:border-gold hover:bg-gold hover:text-white text-gray-800 transition shadow-sm"
+                    className="flex items-center justify-center w-11 h-11 bg-white border border-gray-100 hover:border-primary hover:bg-primary hover:text-white text-gray-800 transition shadow-sm"
                   >
                     <Instagram size={18} />
                   </a>
@@ -193,7 +193,7 @@ export default function ContactUsPage() {
                     htmlFor="name"
                     className={`absolute left-0 transition-all duration-300 text-[10px] uppercase tracking-widest ${
                       focusedField === "name" || formData.name
-                        ? "-top-4 text-gold font-bold"
+                        ? "-top-4 text-primary font-bold"
                         : "top-2 text-gray-400 font-medium"
                     }`}
                   >
@@ -208,7 +208,7 @@ export default function ContactUsPage() {
                     onFocus={() => setFocusedField("name")}
                     onBlur={() => setFocusedField(null)}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-gray-250 py-2.5 text-xs font-semibold text-black outline-none focus:border-gold transition-colors"
+                    className="w-full bg-transparent border-b border-gray-250 py-2.5 text-xs font-semibold text-black outline-none focus:border-primary transition-colors"
                   />
                 </div>
 
@@ -218,7 +218,7 @@ export default function ContactUsPage() {
                     htmlFor="email"
                     className={`absolute left-0 transition-all duration-300 text-[10px] uppercase tracking-widest ${
                       focusedField === "email" || formData.email
-                        ? "-top-4 text-gold font-bold"
+                        ? "-top-4 text-primary font-bold"
                         : "top-2 text-gray-400 font-medium"
                     }`}
                   >
@@ -233,7 +233,7 @@ export default function ContactUsPage() {
                     onFocus={() => setFocusedField("email")}
                     onBlur={() => setFocusedField(null)}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-gray-255 py-2.5 text-xs font-semibold text-black outline-none focus:border-gold transition-colors"
+                    className="w-full bg-transparent border-b border-gray-255 py-2.5 text-xs font-semibold text-black outline-none focus:border-primary transition-colors"
                   />
                 </div>
 
@@ -243,7 +243,7 @@ export default function ContactUsPage() {
                     htmlFor="message"
                     className={`absolute left-0 transition-all duration-300 text-[10px] uppercase tracking-widest ${
                       focusedField === "message" || formData.message
-                        ? "-top-4 text-gold font-bold"
+                        ? "-top-4 text-primary font-bold"
                         : "top-2 text-gray-400 font-medium"
                     }`}
                   >
@@ -258,7 +258,7 @@ export default function ContactUsPage() {
                     onFocus={() => setFocusedField("message")}
                     onBlur={() => setFocusedField(null)}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-gray-255 py-2.5 text-xs font-semibold text-black outline-none focus:border-gold transition-colors resize-none"
+                    className="w-full bg-transparent border-b border-gray-255 py-2.5 text-xs font-semibold text-black outline-none focus:border-primary transition-colors resize-none"
                   />
                 </div>
 
@@ -266,7 +266,7 @@ export default function ContactUsPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full sm:w-auto min-w-[160px] bg-black hover:bg-gold hover:text-white text-white py-4 px-8 text-[10px] font-bold tracking-[0.25em] uppercase transition-all duration-500 shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto min-w-[160px] bg-black hover:bg-gray-800 hover:text-white text-white py-4 px-8 text-[10px] font-bold tracking-[0.25em] uppercase transition-all duration-500 shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   <span>{submitting ? "Sending..." : "Submit Message"}</span>
                   {!submitting && <ArrowRight size={14} />}
@@ -282,10 +282,10 @@ export default function ContactUsPage() {
             <div className="bg-white border border-gray-100 shadow-sm overflow-hidden">
               <button
                 onClick={() => setShowMap(!showMap)}
-                className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-[#FCFAF6] transition-colors cursor-pointer text-left focus:outline-none"
+                className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-gray-50 transition-colors cursor-pointer text-left focus:outline-none"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gold/5 text-gold flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-primary/5 text-primary flex items-center justify-center">
                     <MapPin size={18} />
                   </div>
                   <div>
@@ -296,7 +296,7 @@ export default function ContactUsPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-[9px] text-gold font-bold uppercase tracking-widest hidden sm:inline">
+                  <span className="text-[9px] text-primary font-bold uppercase tracking-widest hidden sm:inline">
                     {showMap ? "Hide Map" : "Reveal Map"}
                   </span>
                   <motion.div
@@ -318,7 +318,7 @@ export default function ContactUsPage() {
                     transition={{ duration: 0.4, ease: "easeInOut" }}
                     className="overflow-hidden border-t border-gray-100"
                   >
-                    <div className="p-6 md:p-8 bg-[#FCFAF6] flex flex-col md:flex-row gap-6 items-start">
+                    <div className="p-6 md:p-8 bg-gray-50 flex flex-col md:flex-row gap-6 items-start">
                       
                       {/* Map info description */}
                       <div className="w-full md:w-1/3 space-y-4">
@@ -330,7 +330,7 @@ export default function ContactUsPage() {
                           href="https://maps.google.com/?q=style+in+budget+shop,+nr.+Pani+ni+tanki,+opp.+Bhojaldham+Residency,+Nikol,+Ahmedabad,+Gujarat+380049"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-[9px] text-gold hover:text-black font-bold uppercase tracking-widest border border-gray-200 px-4 py-2 hover:border-black transition-colors"
+                          className="inline-flex items-center gap-1.5 text-[9px] text-primary hover:text-black font-bold uppercase tracking-widest border border-gray-200 px-4 py-2 hover:border-black transition-colors"
                         >
                           Get Directions ↗
                         </a>

@@ -579,7 +579,7 @@ export default function ProductDetailsClient() {
                     Free Shipping
                   </h4>
                   <p className="text-[10px] text-gray-400 mt-0.5 uppercase tracking-wider">
-                    Orders over ₹2000
+                    On all domestic orders
                   </p>
                 </div>
               </div>

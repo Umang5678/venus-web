@@ -113,6 +113,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+  // Wake up backend on initial load to prevent cold starts
+  useEffect(() => {
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (backendUrl) {
+      fetch(backendUrl)
+        .then(() => console.log("Backend wake-up ping successful"))
+        .catch((err) => console.warn("Backend wake-up ping failed:", err.message));
+    }
+  }, []);
+
   const addToCart = (item: CartItem) => {
     setCart((prev) => {
       const existing = prev.find(

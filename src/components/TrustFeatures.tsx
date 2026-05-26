@@ -11,7 +11,7 @@ export default function TrustFeatures() {
     {
       icon: Truck,
       title: "FREE DELIVERY",
-      desc: "On Orders Over ₹2000",
+      desc: "On All Domestic Orders",
     },
     {
       icon: Sparkles,
@@ -40,7 +40,7 @@ export default function TrustFeatures() {
                 }`}
               >
                 {/* Gold Styled Icon Wrapper */}
-                <div className="mb-4 text-[#B59D7C] group-hover:scale-110 transition-transform duration-300">
+                <div className="mb-4 text-gold group-hover:scale-110 transition-transform duration-300">
                   <Icon size={32} strokeWidth={1.2} />
                 </div>
 

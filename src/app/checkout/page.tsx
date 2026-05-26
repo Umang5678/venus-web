@@ -203,17 +203,59 @@ import Link from "next/link";
 import API from "@/src/lib/api";
 import toast from "react-hot-toast";
 
+const INDIAN_STATES = [
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+  "Andaman and Nicobar Islands",
+  "Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi",
+  "Jammu and Kashmir",
+  "Ladakh",
+  "Lakshadweep",
+  "Puducherry"
+];
+
 export default function CheckoutPage() {
   const { cart, clearCart } = useCart();
 
   const [form, setForm] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     phone: "",
     email: "",
     address: "",
+    apartment: "",
     city: "",
+    state: "",
     postal: "",
-    paymentMethod: "cod",
+    paymentMethod: "razorpay",
   });
   const [errors, setErrors] = useState({
     phone: "",
@@ -235,8 +277,8 @@ export default function CheckoutPage() {
     0,
   );
 
-  const shipping = subtotal > 2000 ? 0 : 99;
-  const total = subtotal + shipping;
+  const shipping = 0;
+  const total = subtotal;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -245,7 +287,16 @@ export default function CheckoutPage() {
   };
 
   const handlePlaceOrder = async () => {
-    if (!form.name || !form.phone || !form.email || !form.address) {
+    if (
+      !form.firstName ||
+      !form.lastName ||
+      !form.phone ||
+      !form.email ||
+      !form.address ||
+      !form.city ||
+      !form.state ||
+      !form.postal
+    ) {
       toast.error("Please fill all required fields");
       return;
     }
@@ -264,7 +315,17 @@ export default function CheckoutPage() {
 
     try {
       const orderData = {
-        ...form,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        name: `${form.firstName} ${form.lastName}`,
+        phone: form.phone,
+        email: form.email,
+        address: `${form.address}${form.apartment ? `, ${form.apartment}` : ""}, ${form.state}`,
+        apartment: form.apartment,
+        city: form.city,
+        state: form.state,
+        postal: form.postal,
+        paymentMethod: form.paymentMethod,
         totalAmount: total,
         items: cart,
       };
@@ -325,26 +386,40 @@ export default function CheckoutPage() {
             </h2>
 
             <div className="space-y-5">
-              {/* Full Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name
-                </label>
-
-                <input
-                  name="name"
-                  placeholder="Enter your full name"
-                  value={form.name}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg p-3 text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
-                />
+              {/* First Name & Last Name */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    First Name
+                  </label>
+                  <input
+                    name="firstName"
+                    placeholder="First Name"
+                    value={form.firstName}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-lg p-3 text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Last Name
+                  </label>
+                  <input
+                    name="lastName"
+                    placeholder="Last Name"
+                    value={form.lastName}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-lg p-3 text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                  />
+                </div>
               </div>
+
+              {/* Phone & Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Phone Number
                   </label>
-
                   <input
                     name="phone"
                     value={form.phone}
@@ -363,16 +438,14 @@ export default function CheckoutPage() {
                     }}
                     className="w-full border border-gray-300 rounded-lg p-3 text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                   />
-
                   {errors.phone && (
                     <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
                   )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email
+                    Email Address
                   </label>
-
                   <input
                     name="email"
                     value={form.email}
@@ -391,38 +464,49 @@ export default function CheckoutPage() {
                     }}
                     className="w-full border border-gray-300 rounded-lg p-3 text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                   />
-
                   {errors.email && (
                     <p className="text-red-500 text-xs mt-1">{errors.email}</p>
                   )}
                 </div>
               </div>
 
-              {/* Address */}
+              {/* Street Address */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Address
+                  Street Address
                 </label>
-
                 <input
                   name="address"
-                  placeholder="Street address, house number"
+                  placeholder="House number and street name"
                   value={form.address}
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded-lg p-3 text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                 />
               </div>
 
-              {/* City + Postal */}
+              {/* Apartment / Suite */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Apartment, suite, unit, etc. (optional)
+                </label>
+                <input
+                  name="apartment"
+                  placeholder="Apartment, suite, unit, etc."
+                  value={form.apartment}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg p-3 text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                />
+              </div>
+
+              {/* Town/City & State */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    City
+                    Town / City
                   </label>
-
                   <input
                     name="city"
-                    placeholder="City"
+                    placeholder="Town / City"
                     value={form.city}
                     onChange={handleChange}
                     className="w-full border border-gray-300 rounded-lg p-3 text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
@@ -431,34 +515,47 @@ export default function CheckoutPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Postal Code
+                    State
                   </label>
-
-                  <input
-                    name="postal"
-                    placeholder="Postal Code"
-                    value={form.postal}
+                  <select
+                    name="state"
+                    value={form.state}
                     onChange={handleChange}
                     className="w-full border border-gray-300 rounded-lg p-3 text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
-                  />
+                  >
+                    <option value="">Select State</option>
+                    {INDIAN_STATES.map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
-              {/* Payment */}
+              {/* Pin Code */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Pin Code
+                </label>
+                <input
+                  name="postal"
+                  placeholder="6-digit pin code"
+                  value={form.postal}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg p-3 text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                />
+              </div>
+
+              {/* Payment Method */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Payment Method
                 </label>
-
-                <select
-                  name="paymentMethod"
-                  value={form.paymentMethod}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg p-3 text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
-                >
-                  <option value="cod">Cash on Delivery</option>
-                  <option value="razorpay">Online Payment (Razorpay)</option>
-                </select>
+                <div className="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 text-gray-700 flex items-center justify-between">
+                  <span className="font-medium">Online Payment (Razorpay)</span>
+                  <span className="text-xs bg-black text-white px-2.5 py-1 rounded-full uppercase tracking-wider font-bold">Selected</span>
+                </div>
               </div>
             </div>
 

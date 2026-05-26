@@ -51,21 +51,13 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full overflow-x-hidden z-40 transition-all duration-300 ${
-          pathname === "/"
-            ? scrolled
-              ? "bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100/50"
-              : "bg-transparent"
-            : "bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100/50"
-        }`}
+        className="fixed top-0 left-0 w-full overflow-x-hidden z-40 transition-all duration-300 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100/50"
       >
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           {/* LEFT: Menu Button */}
           <button
             onClick={() => setMenuOpen(true)}
-            className={`transition-colors p-1.5 rounded-full hover:bg-gray-150 ${
-              pathname === "/" && !scrolled ? "text-white" : "text-black"
-            }`}
+            className="transition-colors p-1.5 rounded-full hover:bg-gray-150 text-black"
             aria-label="Toggle Navigation Menu"
           >
             <Menu size={24} />
@@ -78,9 +70,7 @@ export default function Header() {
               alt="Venus Fashion"
               width={150}
               height={94}
-              className={`h-8 md:h-10 w-auto transition duration-300 ${
-                pathname === "/" && !scrolled ? "invert brightness-0" : ""
-              }`}
+              className="h-8 md:h-10 w-auto transition duration-300"
               priority
             />
           </Link>
@@ -94,20 +84,13 @@ export default function Header() {
               aria-label="Open Shopping Bag"
             >
               <ShoppingBag
-                className={`transition-colors ${
-                  pathname === "/" && !scrolled ? "text-white" : "text-black"
-                }`}
+                className="transition-colors text-black"
                 size={22}
               />
 
               {totalItems > 0 && (
                 <span
-                  className={`absolute -top-1 -right-1 text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold tracking-tight shadow-sm transition
-                    ${
-                      pathname === "/" && !scrolled
-                        ? "bg-white text-black"
-                        : "bg-black text-white"
-                    }`}
+                  className="absolute -top-1 -right-1 text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold tracking-tight shadow-sm transition bg-black text-white"
                 >
                   {totalItems}
                 </span>

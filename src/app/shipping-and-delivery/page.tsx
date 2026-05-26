@@ -51,7 +51,7 @@ export default function ShippingAndDeliveryPage() {
           <section className="space-y-3">
             <h2 className="text-sm font-bold uppercase tracking-widest text-primary">Shipping Charges</h2>
             <p>
-              Free Standard Shipping is automatically applied to all domestic orders over **₹2000**. For orders below ₹2000, a flat shipping charge of ₹99 is added at checkout.
+              Free Standard Shipping is automatically applied to all domestic orders, with no minimum purchase requirement. There are no shipping or handling charges!
             </p>
           </section>
 

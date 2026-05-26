@@ -14,8 +14,8 @@ export default function CartPage() {
     0,
   );
 
-  const shipping = subtotal > 2000 ? 0 : 99;
-  const total = subtotal + shipping;
+  const shipping = 0;
+  const total = subtotal;
 
   if (cart.length === 0) {
     return (

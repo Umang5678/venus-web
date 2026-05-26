@@ -21,15 +21,6 @@ const Footer = () => {
             </p>
             <div className="flex items-center gap-4 pt-2">
               <a
-                href="https://www.facebook.com/venusfashion"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-full bg-white/5 hover:bg-white hover:text-[#483747] transition-all"
-                aria-label="Facebook Link"
-              >
-                <Facebook className="w-4 h-4" />
-              </a>
-              <a
                 href="https://www.instagram.com/venusfashion2020"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -90,7 +81,7 @@ const Footer = () => {
             </div>
             <div className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-gold" />
-              <span>thedreamchapters.events@gmail.com</span>
+              <span>venusfashion@gmail.com</span>
             </div>
           </div>
 

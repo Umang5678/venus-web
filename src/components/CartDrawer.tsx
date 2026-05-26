@@ -19,9 +19,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     0
   );
 
-  const shippingThreshold = 2000;
-  const progressPercent = Math.min((subtotal / shippingThreshold) * 100, 100);
-  const remainingForFreeShipping = shippingThreshold - subtotal;
+
 
   return (
     <AnimatePresence>
@@ -63,21 +61,10 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
             {/* Free Shipping Meter */}
             <div className="p-5 bg-gray-50/50 border-b border-gray-100">
-              {remainingForFreeShipping > 0 ? (
-                <p className="text-xs text-gray-600 mb-2 font-medium tracking-wide">
-                  Add <span className="font-bold text-gray-900">₹{remainingForFreeShipping}</span> more for <span className="text-gold font-bold">FREE SHIPPING</span>
-                </p>
-              ) : (
-                <p className="text-xs text-green-700 mb-2 font-medium tracking-wide flex items-center gap-1.5">
-                  ✨ Congratulations! You qualify for <span className="font-bold">FREE SHIPPING</span>
-                </p>
-              )}
-              <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
-                <div
-                  style={{ width: `${progressPercent}%` }}
-                  className="h-full bg-gold transition-all duration-500 rounded-full"
-                />
-              </div>
+              <p className="text-xs text-green-700 mb-2 font-medium tracking-wide flex items-center gap-1.5">
+                ✨ Congratulations! You qualify for <span className="font-bold">FREE SHIPPING</span>
+              </p>
+              <div className="w-full h-1 bg-gold rounded-full" />
             </div>
 
             {/* Cart Items Area */}
@@ -166,7 +153,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   <div className="flex justify-between text-xs text-gray-500 font-medium">
                     <span>Shipping</span>
                     <span className="text-green-700 font-semibold">
-                      {subtotal >= 2000 ? "FREE" : "₹99"}
+                      FREE
                     </span>
                   </div>
                   <div className="flex justify-between text-sm font-bold text-gray-950">
